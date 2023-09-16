@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Mokslai\\4 metai\\Saitynai\\QuizREST\\QuizRest\\QuizREST.csproj": {}
+    "C:\\Mokslai\\4 metai\\Saitynai\\WebProject\\QuizREST\\QuizREST.csproj": {}
   },
   "projects": {
-    "C:\\Mokslai\\4 metai\\Saitynai\\QuizREST\\QuizRest\\QuizREST.csproj": {
+    "C:\\Mokslai\\4 metai\\Saitynai\\WebProject\\QuizREST\\QuizREST.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Mokslai\\4 metai\\Saitynai\\QuizREST\\QuizRest\\QuizREST.csproj",
+        "projectUniqueName": "C:\\Mokslai\\4 metai\\Saitynai\\WebProject\\QuizREST\\QuizREST.csproj",
         "projectName": "QuizREST",
-        "projectPath": "C:\\Mokslai\\4 metai\\Saitynai\\QuizREST\\QuizRest\\QuizREST.csproj",
+        "projectPath": "C:\\Mokslai\\4 metai\\Saitynai\\WebProject\\QuizREST\\QuizREST.csproj",
         "packagesPath": "C:\\Users\\dabas\\.nuget\\packages\\",
-        "outputPath": "C:\\Mokslai\\4 metai\\Saitynai\\QuizREST\\QuizRest\\obj\\",
+        "outputPath": "C:\\Mokslai\\4 metai\\Saitynai\\WebProject\\QuizREST\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
@@ -29,7 +29,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\sdk\\7.0.306\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -48,7 +47,19 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[7.0.11, )"
+            },
             "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[7.0.11, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
               "target": "Package",
               "version": "[7.0.11, )"
             }
@@ -72,7 +83,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
         }
       }
     }

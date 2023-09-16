@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using QuizREST.Data.Repository;
 
 namespace QuizREST
 {
@@ -27,7 +28,8 @@ namespace QuizREST
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddDbContext<QuizDBContext>(options =>
+            services.AddTransient<IQuizesRepository, QuizesRepository>();
+            services.AddDbContext<ForumDBContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
