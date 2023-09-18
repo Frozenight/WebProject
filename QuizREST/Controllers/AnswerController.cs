@@ -5,7 +5,7 @@ namespace QuizREST.Controllers;
 
 
 [ApiController]
-[Route("api/quizes/{quizId}/questions/{questionId}/answers/{answerId}")]
+[Route("api/quizes/{quizId}/questions/{questionId}/answers")]
 public class AnswerController : ControllerBase
 {
     public void GetMany()
@@ -20,14 +20,14 @@ public class AnswerController : ControllerBase
         // Topic exists + post exists
         // else not found()
     }
-
+    /*
     [HttpGet]
     [Route("{answerId}")]
     public void Get([FromQuery] SearchAnswerParameters parameters)
     {
         // Topic exists + post exists
         // else not found()
-    }
+    }*/
 
     public record SearchAnswerParameters(int quizId, int questionId, int answerId)
     {
