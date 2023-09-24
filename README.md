@@ -1,1 +1,1 @@
-# WebProject https://github.com/Frozenight/WebProject
+lengvai naudojamą viktorinos programą, leidžianti pasitikrinti savo žinias
