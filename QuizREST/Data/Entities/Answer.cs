@@ -9,6 +9,4 @@ public class Answer
     // Foreign key to reference the associated question
     public int QuestionId { get; set; }
 
-    // Navigation property to represent the associated question
-    public Question Question { get; set; }
 }
