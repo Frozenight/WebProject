@@ -160,3 +160,5 @@ C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\obj\Debug\net6.0\refint\QuizREST
 C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\obj\Debug\net6.0\QuizREST.pdb
 C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\obj\Debug\net6.0\QuizREST.genruntimeconfig.cache
 C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\obj\Debug\net6.0\ref\QuizREST.dll
+C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\bin\Debug\net6.0\MySqlConnector.dll
+C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\bin\Debug\net6.0\Pomelo.EntityFrameworkCore.MySql.dll

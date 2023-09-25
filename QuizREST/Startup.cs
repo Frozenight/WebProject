@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
 using QuizREST.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using QuizREST.Data.Repository;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace QuizREST
 {
@@ -29,10 +29,15 @@ namespace QuizREST
         {
             services.AddControllers();
             services.AddTransient<IQuizesRepository, QuizesRepository>();
+            services.AddTransient<IQuestionRepository, QuestionRepository>();
+            services.AddTransient<IAnswerRepository, AnswerRepository>();
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+
             services.AddDbContext<ForumDBContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
             });
+
             services.AddRazorPages();
         }
 
