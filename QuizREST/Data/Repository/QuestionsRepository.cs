@@ -10,7 +10,7 @@ namespace QuizREST.Data.Repository;
 public interface IQuestionRepository
 {
     Task CreateAsync(Question question);
-    Task<Question> GetQuestionForQuizAsync(int quizId, int questionId);
+    Task<Question> GetQuestionForQuizAsync(int questionId);
     Task<IReadOnlyList<Question>> GetQuestionsForQuizAsync(int quizId);
     Task UpdateAsync(Question question);
     Task RemoveAsync(Question question);
@@ -25,9 +25,9 @@ public class QuestionRepository : IQuestionRepository
         _forumDBContext = forumDBContext;
     }
 
-    public async Task<Question?> GetQuestionForQuizAsync(int quizId, int questionId)
+    public async Task<Question?> GetQuestionForQuizAsync(int questionId)
     {
-        return await _forumDBContext.Questions.FirstOrDefaultAsync(q => q.Id == questionId && q.QuizId == quizId);
+        return await _forumDBContext.Questions.FirstOrDefaultAsync(q => q.Id == questionId);
     }
 
     public async Task<IReadOnlyList<Question>> GetQuestionsForQuizAsync(int quizId)

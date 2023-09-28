@@ -80,7 +80,7 @@ namespace QuizREST.Controllers
 
             await _quizesRepository.CreateAsync(quiz);
 
-            return CreatedAtAction("GetQuiz", new { quizId = quiz.Id }, new QuizesDto(quiz.Id, quiz.Name, quiz.Description, quiz.Category, quiz.CreatedDate));
+            return CreatedAtAction(nameof(Get), new { quizId = quiz.Id }, new QuizesDto(quiz.Id, quiz.Name, quiz.Description, quiz.Category, quiz.CreatedDate));
         }
 
         [HttpPut("{quizId}")]

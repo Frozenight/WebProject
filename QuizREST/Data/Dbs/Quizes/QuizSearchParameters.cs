@@ -3,7 +3,7 @@ namespace QuizREST.Data.Dbs.Quizes;
 public class QuizSearchParameters
 {
     // api/quizes
-    private int _pageSize = 2;
+    private int _pageSize = 4;
     private const int MaxPageSize = 50;
     public int PageNumber { get; set; } = 1;
 

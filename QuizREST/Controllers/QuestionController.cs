@@ -12,27 +12,44 @@ using System.Threading.Tasks;
 namespace QuizREST.Controllers
 {
     [ApiController]
-    [Route("api/quizes/{quizId}/questions")]
+    [Route("api/quizes")]
     public class QuestionController : ControllerBase
     {
         private readonly IQuestionRepository _questionRepository;
+        private readonly IQuizesRepository _quizesRepository;
 
-        public QuestionController(IQuestionRepository questionRepository)
+        public QuestionController(IQuestionRepository questionRepository, IQuizesRepository quizesRepository)
         {
             _questionRepository = questionRepository;
+            _quizesRepository = quizesRepository;
         }
 
         [HttpGet]
+        [Route("{quizId}/questions")]
         public async Task<IActionResult> GetMany(int quizId)
         {
             var questions = await _questionRepository.GetQuestionsForQuizAsync(quizId);
             return Ok(questions);
         }
 
-        [HttpGet("{questionId}", Name = "GetQuestion")]
-        public async Task<IActionResult> Get(int quizId, int questionId)
+        [HttpPost("question")]
+        public async Task<ActionResult<QuestionDto>> Create(CreateQuestionDto createQuestionDto)
         {
-            var question = await _questionRepository.GetQuestionForQuizAsync(quizId, questionId);
+            var question = new Question
+            {
+                Text = createQuestionDto.Text,
+                QuizId = createQuestionDto.quizId
+            };
+
+            await _questionRepository.CreateAsync(question);
+
+            return CreatedAtAction(nameof(Get), new { questionId = question.Id }, question);
+        }
+
+        [HttpGet("question/{questionId}", Name = "GetQuestion")]
+        public async Task<IActionResult> Get(int questionId)
+        {
+            var question = await _questionRepository.GetQuestionForQuizAsync(questionId);
 
             if (question == null)
             {
@@ -42,41 +59,36 @@ namespace QuizREST.Controllers
             return Ok(question);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<QuestionDto>> Create(int quizId, CreateQuestionDto createQuestionDto)
+        [HttpPut("question/{questionId}")]
+        public async Task<IActionResult> Update(int questionId, UpdateQuestionDto updateQuestionDto)
         {
-            var question = new Question
-            {
-                Text = createQuestionDto.Text,
-                QuizId = quizId
-            };
-
-            await _questionRepository.CreateAsync(question);
-
-            return CreatedAtAction("GetQuestion", new { quizId, questionId = question.Id }, question);
-        }
-
-        [HttpPut("{questionId}")]
-        public async Task<IActionResult> Update(int quizId, int questionId, UpdateQuestionDto updateQuestionDto)
-        {
-            var question = await _questionRepository.GetQuestionForQuizAsync(quizId, questionId);
+            var question = await _questionRepository.GetQuestionForQuizAsync(questionId);
 
             if (question == null)
             {
                 return NotFound();
             }
 
+            // Check if the provided quizId exists in the database
+            var quiz = await _quizesRepository.GetQuizByIdAsync(updateQuestionDto.quizId);
+
+            if (quiz == null)
+            {
+                return BadRequest("The specified quizId does not exist.");
+            }
+
             question.Text = updateQuestionDto.Text;
+            question.QuizId = updateQuestionDto.quizId;
 
             await _questionRepository.UpdateAsync(question);
 
             return Ok(question);
         }
 
-        [HttpDelete("{questionId}")]
-        public async Task<IActionResult> Remove(int quizId, int questionId)
+        [HttpDelete("question/{questionId}")]
+        public async Task<IActionResult> Remove(int questionId)
         {
-            var question = await _questionRepository.GetQuestionForQuizAsync(quizId, questionId);
+            var question = await _questionRepository.GetQuestionForQuizAsync(questionId);
 
             if (question == null)
             {

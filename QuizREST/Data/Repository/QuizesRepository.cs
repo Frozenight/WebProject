@@ -16,6 +16,8 @@ public interface IQuizesRepository
     Task<PagedList<Quiz>> GetManyAsync(QuizSearchParameters quizSearchParameters);
     Task RemoveAsync(Quiz question);
     Task UpdateAsync(Quiz question);
+    Task<Quiz?> GetQuizByIdAsync(int quizId);
+
 }
 
 public class QuizesRepository : IQuizesRepository
@@ -59,5 +61,9 @@ public class QuizesRepository : IQuizesRepository
     {
         _forumDBContext.Quizes.Remove(quiz);
         await _forumDBContext.SaveChangesAsync();
+    }
+    public async Task<Quiz?> GetQuizByIdAsync(int quizId)
+    {
+        return await _forumDBContext.Quizes.FirstOrDefaultAsync(quiz => quiz.Id == quizId);
     }
 }

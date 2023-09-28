@@ -9,11 +9,12 @@ namespace QuizREST.Data.Repository;
 
 public interface IAnswerRepository
 {
-    Task CreateAsync(int questionId, Answer answer);
-    Task<Answer> GetAnswerForQuestionAsync(int questionId, int answerId);
+    Task CreateAsync(Answer answer);
+    Task<Answer> GetAnswerForQuestionAsync(int answerId);
     Task<IReadOnlyList<Answer>> GetAnswersForQuestionAsync(int questionId);
     Task UpdateAsync(Answer answer);
     Task RemoveAsync(Answer answer);
+    Task<Answer?> GetAnswerByIdAsync(int answerId);
 }
 
 public class AnswerRepository : IAnswerRepository
@@ -25,9 +26,9 @@ public class AnswerRepository : IAnswerRepository
         _forumDBContext = forumDBContext;
     }
 
-    public async Task<Answer?> GetAnswerForQuestionAsync(int questionId, int answerId)
+    public async Task<Answer?> GetAnswerForQuestionAsync(int answerId)
     {
-        return await _forumDBContext.Answers.FirstOrDefaultAsync(a => a.Id == answerId && a.QuestionId == questionId);
+        return await _forumDBContext.Answers.FirstOrDefaultAsync(a => a.Id == answerId);
     }
 
     public async Task<IReadOnlyList<Answer>> GetAnswersForQuestionAsync(int questionId)
@@ -35,9 +36,8 @@ public class AnswerRepository : IAnswerRepository
         return await _forumDBContext.Answers.Where(a => a.QuestionId == questionId).ToListAsync();
     }
 
-    public async Task CreateAsync(int questionId, Answer answer)
+    public async Task CreateAsync(Answer answer)
     {
-        answer.QuestionId = questionId;
         _forumDBContext.Answers.Add(answer);
         await _forumDBContext.SaveChangesAsync();
     }
@@ -52,5 +52,9 @@ public class AnswerRepository : IAnswerRepository
     {
         _forumDBContext.Answers.Remove(answer);
         await _forumDBContext.SaveChangesAsync();
+    }
+    public async Task<Answer?> GetAnswerByIdAsync(int answerId)
+    {
+        return await _forumDBContext.Answers.FirstOrDefaultAsync(answer => answer.Id == answerId);
     }
 }
