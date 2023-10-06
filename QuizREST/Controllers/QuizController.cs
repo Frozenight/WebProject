@@ -1,11 +1,15 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using QuizREST.Data;
 using QuizREST.Data.Dbs.Quizes;
 using QuizREST.Data.Entities;
 using QuizREST.Data.Repository;
+using QuizREST.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -16,10 +20,14 @@ namespace QuizREST.Controllers
     public class QuizController : ControllerBase
     {
         private readonly IQuizesRepository _quizesRepository;
+        private readonly LinkGenerator _linkGenerator;
+        private readonly HttpContextAccessor _httpContextAccessor;
 
-        public QuizController(IQuizesRepository quizesRepository)
+        public QuizController(IQuizesRepository quizesRepository, LinkGenerator linkGenerator, HttpContextAccessor httpContextAccessor)
         {
             _quizesRepository = quizesRepository;
+            _linkGenerator = linkGenerator;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet(Name = "GetQuizes")]
@@ -53,6 +61,7 @@ namespace QuizREST.Controllers
         [HttpGet("{quizId}", Name = "GetQuiz")]
         public async Task<IActionResult> Get(int quizId)
         {
+            HttpContext httpContext = HttpContext.Request.HttpContext;
             var quiz = await _quizesRepository.GetAsync(quizId);
 
             if (quiz == null)
@@ -60,16 +69,18 @@ namespace QuizREST.Controllers
                 return NotFound();
             }
 
-            var links = CreateLinksForQuiz(quizId);
+            var links = CreateLinks(quiz.Id, httpContext, _linkGenerator);
 
             var quizDto = new QuizesDto(quiz.Id, quiz.Name, quiz.Description, quiz.Category, quiz.CreatedDate);
 
             return Ok(new { Resource = quizDto, Links = links });
         }
 
-        [HttpPost]
-        public async Task<ActionResult<QuizesDto>> Create(CreateQuizDto createQuizDto)
+        [HttpPost(Name = "CreateQuiz")]
+        public async Task<ActionResult<QuizesDto>> Create([FromBody] CreateQuizDto createQuizDto)
         {
+            //var httpContext = _httpContextAccessor.HttpContext;
+            HttpContext httpContext = HttpContext.Request.HttpContext;
             var quiz = new Quiz
             {
                 Name = createQuizDto.Name,
@@ -80,10 +91,15 @@ namespace QuizREST.Controllers
 
             await _quizesRepository.CreateAsync(quiz);
 
-            return CreatedAtAction(nameof(Get), new { quizId = quiz.Id }, new QuizesDto(quiz.Id, quiz.Name, quiz.Description, quiz.Category, quiz.CreatedDate));
+            var links = CreateLinks(quiz.Id, httpContext, _linkGenerator);
+            var quizDto = new QuizesDto(quiz.Id, quiz.Name, quiz.Description, quiz.Category, quiz.CreatedDate);
+
+            var resource = new ResourceDto<QuizesDto>(quizDto, links.ToArray());
+
+            return CreatedAtAction(nameof(Get), new { quizId = quiz.Id }, resource);
         }
 
-        [HttpPut("{quizId}")]
+        [HttpPut("{quizId}", Name = "UpdateQuiz")]
         public async Task<ActionResult<QuizesDto>> Update(int quizId, UpdateQuizDto updateQuizDto)
         {
             var quiz = await _quizesRepository.GetAsync(quizId);
@@ -99,8 +115,15 @@ namespace QuizREST.Controllers
 
             await _quizesRepository.UpdateAsync(quiz);
 
-            return Ok(new QuizesDto(quiz.Id, quiz.Name, quiz.Description, quiz.Category, quiz.CreatedDate));
+            // Create links for the updated quiz
+            var httpContext = HttpContext.Request.HttpContext;
+            var links = CreateLinks(quiz.Id, httpContext, _linkGenerator);
+
+            var updatedQuizDto = new QuizesDto(quiz.Id, quiz.Name, quiz.Description, quiz.Category, quiz.CreatedDate);
+
+            return Ok(new { Resource = updatedQuizDto, Links = links });
         }
+
 
         [HttpDelete("{quizId}", Name = "DeleteQuiz")]
         public async Task<ActionResult> Remove(int quizId)
@@ -116,11 +139,18 @@ namespace QuizREST.Controllers
 
             return NoContent();
         }
-
+        /*
         private IEnumerable<LinkDto> CreateLinksForQuiz(int quizId)
         {
             yield return new LinkDto { Href = Url.Link("GetQuiz", new { quizId }), Rel = "self", Method = "GET" };
             yield return new LinkDto { Href = Url.Link("DeleteQuiz", new { quizId }), Rel = "delete_quiz", Method = "DELETE" };
+        }*/
+
+        static IEnumerable<LinksDto> CreateLinks(int quizId, HttpContext httpContext, LinkGenerator linkGenerator)
+        {
+            yield return new LinksDto(linkGenerator.GetUriByName(httpContext, "GetQuiz", new { quizId}), "self", "GET");
+            yield return new LinksDto(linkGenerator.GetUriByName(httpContext, "UpdateQuiz", new { quizId }), "edit", "PUT");
+            yield return new LinksDto(linkGenerator.GetUriByName(httpContext, "DeleteQuiz", new { quizId }), "delete", "DELETE");
         }
 
         private string? CreateTopicsResourceUri(QuizSearchParameters topicSearchParametersDto, ResourceUriType type)

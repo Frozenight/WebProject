@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using QuizREST.Data.Repository;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Microsoft.AspNetCore.Http;
 
 namespace QuizREST
 {
@@ -31,6 +32,7 @@ namespace QuizREST
             services.AddTransient<IQuizesRepository, QuizesRepository>();
             services.AddTransient<IQuestionRepository, QuestionRepository>();
             services.AddTransient<IAnswerRepository, AnswerRepository>();
+            services.AddSingleton<HttpContextAccessor>();
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<ForumDBContext>(options =>

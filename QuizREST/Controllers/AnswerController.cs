@@ -1,7 +1,13 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using QuizREST.Data.Dbs.Answers;
+using QuizREST.Data.Dbs.Questions;
 using QuizREST.Data.Entities;
 using QuizREST.Data.Repository;
+using QuizREST.Helpers;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace QuizREST.Controllers
@@ -12,11 +18,13 @@ namespace QuizREST.Controllers
     {
         private readonly IAnswerRepository _answerRepository;
         private readonly IQuestionRepository _questionRepository;
+        private readonly LinkGenerator _linkGenerator;
 
-        public AnswerController(IAnswerRepository answerRepository, IQuestionRepository questionRepository)
+        public AnswerController(IAnswerRepository answerRepository, IQuestionRepository questionRepository, LinkGenerator linkGenerator)
         {
             _answerRepository = answerRepository;
             _questionRepository = questionRepository;
+            _linkGenerator = linkGenerator;
         }
 
         [HttpGet("{quizId}/questions/{questionId}/answers")]
@@ -26,7 +34,24 @@ namespace QuizREST.Controllers
             return Ok(answers);
         }
 
-        [HttpPost("answer")]
+        [HttpGet("answer/{answerId}", Name = "GetAnswer")]
+        public async Task<IActionResult> Get(int answerId)
+        {
+            HttpContext httpContext = HttpContext.Request.HttpContext;
+            var answer = await _answerRepository.GetAnswerForQuestionAsync(answerId);
+
+            if (answer == null)
+            {
+                return NotFound();
+            }
+
+            var links = CreateLinks(answer.Id, httpContext, _linkGenerator);
+            var answerDto = new AnswerDto(answer.Id, answer.Text, answer.IsCorrect);
+
+            return Ok(new { Resource = answerDto, Links = links });
+        }
+
+        [HttpPost("answer", Name = "CreateAnswer")]
         public async Task<ActionResult<AnswerDto>> Create(CreateAnswerDto createAnswerDto)
         {
             var answer = new Answer
@@ -38,23 +63,17 @@ namespace QuizREST.Controllers
 
             await _answerRepository.CreateAsync(answer);
 
-            return CreatedAtAction(nameof(Get), new { answerId = answer.Id }, answer);
+            // Create links for the created answer
+            var httpContext = HttpContext.Request.HttpContext;
+            var links = CreateLinks(answer.Id, httpContext, _linkGenerator);
+            var answerDto = new AnswerDto(answer.Id, answer.Text, answer.IsCorrect);
+
+            var resource = new ResourceDto<AnswerDto>(answerDto, links.ToArray());
+
+            return CreatedAtAction(nameof(Get), new { answerId = answer.Id }, resource);
         }
 
-        [HttpGet("answer/{answerId}", Name = "GetAnswer")]
-        public async Task<IActionResult> Get(int answerId)
-        {
-            var answer = await _answerRepository.GetAnswerForQuestionAsync(answerId);
-
-            if (answer == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(answer);
-        }
-
-        [HttpPut("answer/{answerId}")]
+        [HttpPut("answer/{answerId}", Name = "UpdateAnswer")]
         public async Task<IActionResult> Update(int answerId, UpdateAnswerDto updateAnswerDto)
         {
             var answer = await _answerRepository.GetAnswerForQuestionAsync(answerId);
@@ -71,17 +90,20 @@ namespace QuizREST.Controllers
                 return BadRequest("The specified questionId does not exist.");
             }
 
-
             answer.Text = updateAnswerDto.Text;
             answer.IsCorrect = updateAnswerDto.IsCorrect;
             answer.QuestionId = updateAnswerDto.questionId;
 
             await _answerRepository.UpdateAsync(answer);
 
-            return Ok(answer);
+            var httpContext = HttpContext.Request.HttpContext;
+            var links = CreateLinks(answer.Id, httpContext, _linkGenerator);
+            var updatedAnswerDto = new AnswerDto(answer.Id, answer.Text, answer.IsCorrect);
+
+            return Ok(new { Resource = updatedAnswerDto, Links = links });
         }
 
-        [HttpDelete("answer/{answerId}")]
+        [HttpDelete("answer/{answerId}", Name = "RemoveAnswer")]
         public async Task<IActionResult> Remove(int answerId)
         {
             var answer = await _answerRepository.GetAnswerForQuestionAsync(answerId);
@@ -94,6 +116,13 @@ namespace QuizREST.Controllers
             await _answerRepository.RemoveAsync(answer);
 
             return NoContent();
+        }
+
+        static IEnumerable<LinksDto> CreateLinks(int answerId, HttpContext httpContext, LinkGenerator linkGenerator)
+        {
+            yield return new LinksDto(linkGenerator.GetUriByName(httpContext, "GetAnswer", new { answerId }), "self", "GET");
+            yield return new LinksDto(linkGenerator.GetUriByName(httpContext, "UpdateAnswer", new { answerId }), "edit", "PUT");
+            yield return new LinksDto(linkGenerator.GetUriByName(httpContext, "DeleteAnswer", new { answerId }), "delete", "DELETE");
         }
     }
 }
