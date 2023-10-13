@@ -1,10 +1,13 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using QuizREST.Data.Dbs.Quizes;
 using QuizREST.Data.Entities;
 using QuizREST.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace QuizREST.Data.Repository;
 
@@ -17,12 +20,15 @@ public interface IQuizesRepository
     Task RemoveAsync(Quiz question);
     Task UpdateAsync(Quiz question);
     Task<Quiz?> GetQuizByIdAsync(int quizId);
-
+    Task CommitTransactionAsync();
+    Task RollbackTransactionAsync();
+    Task BeginTransactionAsync();
 }
 
 public class QuizesRepository : IQuizesRepository
 {
     private readonly ForumDBContext _forumDBContext;
+    private IDbContextTransaction _transaction;
     public QuizesRepository(ForumDBContext forumDBContext)
     {
         _forumDBContext = forumDBContext;
@@ -65,5 +71,29 @@ public class QuizesRepository : IQuizesRepository
     public async Task<Quiz?> GetQuizByIdAsync(int quizId)
     {
         return await _forumDBContext.Quizes.FirstOrDefaultAsync(quiz => quiz.Id == quizId);
+    }
+
+    public async Task BeginTransactionAsync()
+    {
+        _transaction = await _forumDBContext.Database.BeginTransactionAsync();
+    }
+
+    public async Task CommitTransactionAsync()
+    {
+        try
+        {
+            await _transaction.CommitAsync();
+        }
+        catch (Exception)
+        {
+            // Handle exceptions or log them
+            _transaction.Rollback();
+            throw; // Re-throw the exception
+        }
+    }
+
+    public async Task RollbackTransactionAsync()
+    {
+        _transaction.Rollback();
     }
 }

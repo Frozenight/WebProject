@@ -14,6 +14,7 @@ public interface IQuestionRepository
     Task<IReadOnlyList<Question>> GetQuestionsForQuizAsync(int quizId);
     Task UpdateAsync(Question question);
     Task RemoveAsync(Question question);
+    Task<Question?> GetQuestionByIdAsync(int quizId);
 }
 
 public class QuestionRepository : IQuestionRepository
@@ -51,5 +52,10 @@ public class QuestionRepository : IQuestionRepository
     {
         _forumDBContext.Questions.Remove(question);
         await _forumDBContext.SaveChangesAsync();
+    }
+
+    public async Task<Question?> GetQuestionByIdAsync(int questionId)
+    {
+        return await _forumDBContext.Questions.FirstOrDefaultAsync(question => question.Id == questionId);
     }
 }

@@ -19,12 +19,14 @@ namespace QuizREST.Controllers
     [Route("api/quizes")]
     public class QuestionController : ControllerBase
     {
+        private readonly IAnswerRepository _answerRepository;
         private readonly IQuestionRepository _questionRepository;
         private readonly IQuizesRepository _quizesRepository;
         private readonly LinkGenerator _linkGenerator;
 
-        public QuestionController(IQuestionRepository questionRepository, IQuizesRepository quizesRepository, LinkGenerator linkGenerator)
+        public QuestionController(IQuestionRepository questionRepository, IQuizesRepository quizesRepository, IAnswerRepository answerRepository, LinkGenerator linkGenerator)
         {
+            _answerRepository = answerRepository;
             _questionRepository = questionRepository;
             _quizesRepository = quizesRepository;
             _linkGenerator = linkGenerator;
@@ -64,6 +66,14 @@ namespace QuizREST.Controllers
                 Text = createQuestionDto.Text,
                 QuizId = createQuestionDto.quizId
             };
+
+            // Check if the provided quizId exists in the database
+            var quiz = await _quizesRepository.GetQuizByIdAsync(createQuestionDto.quizId);
+
+            if (quiz == null)
+            {
+                return BadRequest("The specified quizId does not exist.");
+            }
 
             await _questionRepository.CreateAsync(question);
 
@@ -115,6 +125,17 @@ namespace QuizREST.Controllers
             if (question == null)
             {
                 return NotFound();
+            }
+
+            var answers = await _answerRepository.GetAnswersForQuestionAsync(questionId);
+
+            if (answers != null && answers.Any())
+            {
+                // Delete all associated answers
+                foreach (var answer in answers)
+                {
+                    await _answerRepository.RemoveAsync(answer);
+                }
             }
 
             await _questionRepository.RemoveAsync(question);

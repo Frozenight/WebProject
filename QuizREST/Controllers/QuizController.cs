@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace QuizREST.Controllers
 {
@@ -19,15 +20,19 @@ namespace QuizREST.Controllers
     [Route("api/quizes")]
     public class QuizController : ControllerBase
     {
+        private readonly IAnswerRepository _answerRepository;
+        private readonly IQuestionRepository _questionRepository;
         private readonly IQuizesRepository _quizesRepository;
         private readonly LinkGenerator _linkGenerator;
         private readonly HttpContextAccessor _httpContextAccessor;
 
-        public QuizController(IQuizesRepository quizesRepository, LinkGenerator linkGenerator, HttpContextAccessor httpContextAccessor)
+        public QuizController(IQuizesRepository quizesRepository, IAnswerRepository answerRepository,  LinkGenerator linkGenerator, HttpContextAccessor httpContextAccessor, IQuestionRepository questionRepository)
         {
+            _answerRepository = answerRepository;
             _quizesRepository = quizesRepository;
             _linkGenerator = linkGenerator;
             _httpContextAccessor = httpContextAccessor;
+            _questionRepository = questionRepository;
         }
 
         [HttpGet(Name = "GetQuizes")]
@@ -124,27 +129,57 @@ namespace QuizREST.Controllers
             return Ok(new { Resource = updatedQuizDto, Links = links });
         }
 
-
         [HttpDelete("{quizId}", Name = "DeleteQuiz")]
         public async Task<ActionResult> Remove(int quizId)
         {
-            var quiz = await _quizesRepository.GetAsync(quizId);
-
-            if (quiz == null)
+            using (var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
-                return NotFound();
+                try
+                {
+                    var quiz = await _quizesRepository.GetAsync(quizId);
+
+                    if (quiz == null)
+                    {
+                        return NotFound();
+                    }
+
+                    var questions = await _questionRepository.GetQuestionsForQuizAsync(quizId);
+
+                    if (questions != null && questions.Any())
+                    {
+                        foreach (var question in questions)
+                        {
+                            var answers = await _answerRepository.GetAnswersForQuestionAsync(question.Id);
+
+                            if (answers != null && answers.Any())
+                            {
+                                // Delete all associated answers
+                                foreach (var answer in answers)
+                                {
+                                    await _answerRepository.RemoveAsync(answer);
+                                }
+                            }
+
+                            await _questionRepository.RemoveAsync(question);
+                        }
+                    }
+
+                    await _quizesRepository.RemoveAsync(quiz);
+
+                    transactionScope.Complete(); // Commit the transaction.
+
+                    return NoContent();
+                }
+                catch (Exception)
+                {
+                    // Handle the exception, log it, etc.
+                    return StatusCode(500); // Or another appropriate error response
+                }
             }
-
-            await _quizesRepository.RemoveAsync(quiz);
-
-            return NoContent();
         }
-        /*
-        private IEnumerable<LinkDto> CreateLinksForQuiz(int quizId)
-        {
-            yield return new LinkDto { Href = Url.Link("GetQuiz", new { quizId }), Rel = "self", Method = "GET" };
-            yield return new LinkDto { Href = Url.Link("DeleteQuiz", new { quizId }), Rel = "delete_quiz", Method = "DELETE" };
-        }*/
+
+
+
 
         static IEnumerable<LinksDto> CreateLinks(int quizId, HttpContext httpContext, LinkGenerator linkGenerator)
         {

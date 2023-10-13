@@ -61,6 +61,13 @@ namespace QuizREST.Controllers
                 QuestionId = createAnswerDto.questionId // Associate the answer with the specified question
             };
 
+            var question = await _questionRepository.GetQuestionByIdAsync(createAnswerDto.questionId);
+
+            if (question == null)
+            {
+                return BadRequest("The specified questionId does not exist.");
+            }
+
             await _answerRepository.CreateAsync(answer);
 
             // Create links for the created answer
@@ -112,6 +119,7 @@ namespace QuizREST.Controllers
             {
                 return NotFound();
             }
+
 
             await _answerRepository.RemoveAsync(answer);
 
