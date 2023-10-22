@@ -1,10 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using QuizREST.Data.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using QuizREST.Auth.Model;
 
 namespace QuizREST.Data
 {
-    public class ForumDBContext : DbContext
+    public class ForumDBContext : IdentityDbContext<QuizRestUser>
     {
         private readonly IConfiguration _configuration;
 

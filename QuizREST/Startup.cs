@@ -13,6 +13,11 @@ using System.Threading.Tasks;
 using QuizREST.Data.Repository;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Microsoft.AspNetCore.Http;
+using QuizREST.Auth.Model;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace QuizREST
 {
@@ -33,6 +38,24 @@ namespace QuizREST
             services.AddTransient<IQuestionRepository, QuestionRepository>();
             services.AddTransient<IAnswerRepository, AnswerRepository>();
             services.AddSingleton<HttpContextAccessor>();
+
+            services.AddIdentity<QuizRestUser, IdentityRole>()
+                    .AddEntityFrameworkStores<ForumDBContext>()
+                    .AddDefaultTokenProviders();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }
+            ).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters.ValidAudience = Configuration["JWT:ValidAudience"];
+                options.TokenValidationParameters.ValidIssuer = Configuration["JWT:ValidIssuer"];
+                options.TokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]));
+            });
+
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<ForumDBContext>(options =>
@@ -62,6 +85,7 @@ namespace QuizREST
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
