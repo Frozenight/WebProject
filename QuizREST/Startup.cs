@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using QuizREST.Auth;
 
 namespace QuizREST
 {
@@ -62,12 +63,14 @@ namespace QuizREST
             {
                 options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
             });
+            services.AddTransient<IJwtTokenService, JwtTokenService>();
+            services.AddScoped<AuthDbSeeder>();
 
             services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public async void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -93,6 +96,12 @@ namespace QuizREST
                 endpoints.MapControllers();
                 endpoints.MapRazorPages();
             });
+
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var seeder = scope.ServiceProvider.GetRequiredService<AuthDbSeeder>();
+                await seeder.SeedAsync();
+            }
         }
     }
 }
