@@ -226,7 +226,13 @@ namespace QuizREST.Migrations
                     b.Property<string>("Text")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Answers");
                 });
@@ -243,7 +249,13 @@ namespace QuizREST.Migrations
                     b.Property<string>("Text")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Questions");
                 });
@@ -326,6 +338,28 @@ namespace QuizREST.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("QuizREST.Data.Entities.Answer", b =>
+                {
+                    b.HasOne("QuizREST.Auth.Model.QuizRestUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("QuizREST.Data.Entities.Question", b =>
+                {
+                    b.HasOne("QuizREST.Auth.Model.QuizRestUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("QuizREST.Data.Entities.Quiz", b =>

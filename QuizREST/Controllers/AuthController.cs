@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using QuizREST.Auth;
 using QuizREST.Auth.Model;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace QuizREST.Controllers;
 [ApiController]
+[AllowAnonymous]
 [Route("api")]
 public class AuthController : ControllerBase
 {

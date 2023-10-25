@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QuizREST.Data.Entities;
 
-public class Quiz
+public class Quiz : IUserOwnedRecourse
 {
     public int Id { get; set; }
     [Column(TypeName = "text")]

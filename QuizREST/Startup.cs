@@ -19,6 +19,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using QuizREST.Auth;
+using Microsoft.AspNetCore.Authorization;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace QuizREST
 {
@@ -34,6 +36,8 @@ namespace QuizREST
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
             services.AddControllers();
             services.AddTransient<IQuizesRepository, QuizesRepository>();
             services.AddTransient<IQuestionRepository, QuestionRepository>();
@@ -65,6 +69,13 @@ namespace QuizREST
             });
             services.AddTransient<IJwtTokenService, JwtTokenService>();
             services.AddScoped<AuthDbSeeder>();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(PolicyNames.RecouseOwner, policy => policy.Requirements.Add(new RecourseOwnerRequirment()));
+            });
+
+            services.AddSingleton<IAuthorizationHandler, RecourseOwnerAuthorizationHandler>();
 
             services.AddRazorPages();
         }

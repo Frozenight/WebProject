@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using QuizREST.Auth.Model;
 using QuizREST.Data;
 using QuizREST.Data.Dbs.Quizes;
 using QuizREST.Data.Entities;
@@ -8,8 +10,10 @@ using QuizREST.Data.Repository;
 using QuizREST.Helpers;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -25,14 +29,17 @@ namespace QuizREST.Controllers
         private readonly IQuizesRepository _quizesRepository;
         private readonly LinkGenerator _linkGenerator;
         private readonly HttpContextAccessor _httpContextAccessor;
+        private readonly IAuthorizationService _authorizationService;
 
-        public QuizController(IQuizesRepository quizesRepository, IAnswerRepository answerRepository,  LinkGenerator linkGenerator, HttpContextAccessor httpContextAccessor, IQuestionRepository questionRepository)
+        public QuizController(IQuizesRepository quizesRepository, IAnswerRepository answerRepository, LinkGenerator linkGenerator, 
+            HttpContextAccessor httpContextAccessor, IQuestionRepository questionRepository, IAuthorizationService authorizationService)
         {
             _answerRepository = answerRepository;
             _quizesRepository = quizesRepository;
             _linkGenerator = linkGenerator;
             _httpContextAccessor = httpContextAccessor;
             _questionRepository = questionRepository;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet(Name = "GetQuizes")]
@@ -82,6 +89,7 @@ namespace QuizREST.Controllers
         }
 
         [HttpPost(Name = "CreateQuiz")]
+        [Authorize(Roles = QuizRoles.Admin)]
         public async Task<ActionResult<QuizesDto>> Create([FromBody] CreateQuizDto createQuizDto)
         {
             //var httpContext = _httpContextAccessor.HttpContext;
@@ -91,7 +99,8 @@ namespace QuizREST.Controllers
                 Name = createQuizDto.Name,
                 Description = createQuizDto.Description,
                 Category = createQuizDto.Category,
-                CreatedDate = DateTime.Now
+                CreatedDate = DateTime.Now,
+                UserId = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
             };
 
             await _quizesRepository.CreateAsync(quiz);
@@ -105,6 +114,7 @@ namespace QuizREST.Controllers
         }
 
         [HttpPut("{quizId}", Name = "UpdateQuiz")]
+        [Authorize(Roles = QuizRoles.Admin)]
         public async Task<ActionResult<QuizesDto>> Update(int quizId, UpdateQuizDto updateQuizDto)
         {
             var quiz = await _quizesRepository.GetAsync(quizId);
@@ -113,6 +123,11 @@ namespace QuizREST.Controllers
             {
                 return NotFound();
             }
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, quiz, PolicyNames.RecouseOwner);
+            if (!authorizationResult.Succeeded)
+                return Forbid();
+
 
             quiz.Name = updateQuizDto.Name;
             quiz.Description = updateQuizDto.Description;
@@ -130,6 +145,7 @@ namespace QuizREST.Controllers
         }
 
         [HttpDelete("{quizId}", Name = "DeleteQuiz")]
+        [Authorize(Roles = QuizRoles.Admin)]
         public async Task<ActionResult> Remove(int quizId)
         {
             using (var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
