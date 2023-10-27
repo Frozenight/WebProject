@@ -64,9 +64,10 @@ namespace QuizREST
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<ForumDBContext>(options =>
-            {
-                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
-            });
+                options.UseMySql(Configuration.GetConnectionString("DefaultConnection"),
+                    new MySqlServerVersion(new Version(8, 0, 21)))); // Use appropriate version number
+
+
             services.AddTransient<IJwtTokenService, JwtTokenService>();
             services.AddScoped<AuthDbSeeder>();
 
