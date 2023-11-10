@@ -42,6 +42,7 @@ namespace QuizREST.Controllers
         }
 
         [HttpGet("answer/{answerId}", Name = "GetAnswer")]
+        [Authorize(Roles = QuizRoles.QuizUser + "," + QuizRoles.Admin)]
         public async Task<IActionResult> Get(int answerId)
         {
             HttpContext httpContext = HttpContext.Request.HttpContext;

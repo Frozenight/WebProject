@@ -71,6 +71,7 @@ namespace QuizREST.Controllers
         }
 
         [HttpGet("{quizId}", Name = "GetQuiz")]
+        [Authorize(Roles = QuizRoles.QuizUser + "," + QuizRoles.Admin)]
         public async Task<IActionResult> Get(int quizId)
         {
             HttpContext httpContext = HttpContext.Request.HttpContext;
@@ -89,7 +90,7 @@ namespace QuizREST.Controllers
         }
 
         [HttpPost(Name = "CreateQuiz")]
-        [Authorize(Roles = QuizRoles.Admin)]
+        [Authorize(Roles = QuizRoles.QuizUser)]
         public async Task<ActionResult<QuizesDto>> Create([FromBody] CreateQuizDto createQuizDto)
         {
             //var httpContext = _httpContextAccessor.HttpContext;
