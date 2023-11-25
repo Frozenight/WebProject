@@ -109,6 +109,12 @@ namespace QuizREST
                 endpoints.MapRazorPages();
             });
 
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "clientweb"; // Adjust the path accordingly
+            });
+
+
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 var seeder = scope.ServiceProvider.GetRequiredService<AuthDbSeeder>();

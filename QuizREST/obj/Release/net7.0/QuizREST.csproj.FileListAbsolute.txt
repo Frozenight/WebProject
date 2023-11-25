@@ -92,3 +92,7 @@ C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\obj\Release\net7.0\refint\QuizRE
 C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\obj\Release\net7.0\QuizREST.pdb
 C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\obj\Release\net7.0\QuizREST.genruntimeconfig.cache
 C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\obj\Release\net7.0\ref\QuizREST.dll
+C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\bin\Release\net7.0\clientweb\jsconfig.json
+C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\bin\Release\net7.0\clientweb\package-lock.json
+C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\bin\Release\net7.0\clientweb\package.json
+C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\bin\Release\net7.0\Microsoft.AspNetCore.SpaServices.Extensions.dll

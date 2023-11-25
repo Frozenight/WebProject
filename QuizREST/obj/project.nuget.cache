@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Su2oiSZAgZVPOL3hsnkVLBr+stipc00Uxs5k9R96hPCE5V2EHIUgRephC1I7TdgWG8AAUYlbwOmD3yA0xIGkEQ==",
+  "dgSpecHash": "QeTNeCDwEqEzMEOElrrBOKPXJBCx8DUy455ZIFXQ70OUChK93rH13VB16PmZfTD6WekA8K1/SpANvvejtAVKWg==",
   "success": true,
   "projectFilePath": "C:\\Mokslai\\4 metai\\Saitynai\\WebProject\\QuizREST\\QuizREST.csproj",
   "expectedPackageFiles": [
@@ -16,6 +16,7 @@
     "C:\\Users\\dabas\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\7.0.11\\microsoft.aspnetcore.cryptography.internal.7.0.11.nupkg.sha512",
     "C:\\Users\\dabas\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\7.0.11\\microsoft.aspnetcore.cryptography.keyderivation.7.0.11.nupkg.sha512",
     "C:\\Users\\dabas\\.nuget\\packages\\microsoft.aspnetcore.identity.entityframeworkcore\\7.0.11\\microsoft.aspnetcore.identity.entityframeworkcore.7.0.11.nupkg.sha512",
+    "C:\\Users\\dabas\\.nuget\\packages\\microsoft.aspnetcore.spaservices.extensions\\7.0.0\\microsoft.aspnetcore.spaservices.extensions.7.0.0.nupkg.sha512",
     "C:\\Users\\dabas\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
     "C:\\Users\\dabas\\.nuget\\packages\\microsoft.data.sqlclient\\5.1.1\\microsoft.data.sqlclient.5.1.1.nupkg.sha512",
@@ -33,6 +34,9 @@
     "C:\\Users\\dabas\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\7.0.0\\microsoft.extensions.dependencyinjection.7.0.0.nupkg.sha512",
     "C:\\Users\\dabas\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\7.0.0\\microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\dabas\\.nuget\\packages\\microsoft.extensions.dependencymodel\\7.0.0\\microsoft.extensions.dependencymodel.7.0.0.nupkg.sha512",
+    "C:\\Users\\dabas\\.nuget\\packages\\microsoft.extensions.fileproviders.abstractions\\7.0.0\\microsoft.extensions.fileproviders.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\dabas\\.nuget\\packages\\microsoft.extensions.fileproviders.physical\\7.0.0\\microsoft.extensions.fileproviders.physical.7.0.0.nupkg.sha512",
+    "C:\\Users\\dabas\\.nuget\\packages\\microsoft.extensions.filesystemglobbing\\7.0.0\\microsoft.extensions.filesystemglobbing.7.0.0.nupkg.sha512",
     "C:\\Users\\dabas\\.nuget\\packages\\microsoft.extensions.identity.core\\7.0.11\\microsoft.extensions.identity.core.7.0.11.nupkg.sha512",
     "C:\\Users\\dabas\\.nuget\\packages\\microsoft.extensions.identity.stores\\7.0.11\\microsoft.extensions.identity.stores.7.0.11.nupkg.sha512",
     "C:\\Users\\dabas\\.nuget\\packages\\microsoft.extensions.logging\\7.0.0\\microsoft.extensions.logging.7.0.0.nupkg.sha512",
