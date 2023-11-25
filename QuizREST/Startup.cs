@@ -38,6 +38,15 @@ namespace QuizREST
         {
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("Cors", p =>
+                {
+                    p.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
             services.AddControllers();
             services.AddTransient<IQuizesRepository, QuizesRepository>();
             services.AddTransient<IQuestionRepository, QuestionRepository>();
@@ -94,7 +103,7 @@ namespace QuizREST
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            app.UseCors("Cors");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
