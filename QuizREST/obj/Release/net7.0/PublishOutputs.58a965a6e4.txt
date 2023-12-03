@@ -1,6 +1,9 @@
 C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\obj\Release\net7.0\PubTmp\Out\QuizREST.exe
 C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\obj\Release\net7.0\PubTmp\Out\appsettings.Development.json
 C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\obj\Release\net7.0\PubTmp\Out\appsettings.json
+C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\obj\Release\net7.0\PubTmp\Out\clientweb\jsconfig.json
+C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\obj\Release\net7.0\PubTmp\Out\clientweb\package-lock.json
+C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\obj\Release\net7.0\PubTmp\Out\clientweb\package.json
 C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\obj\Release\net7.0\PubTmp\Out\QuizREST.dll
 C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\obj\Release\net7.0\PubTmp\Out\QuizREST.runtimeconfig.json
 C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\obj\Release\net7.0\PubTmp\Out\QuizREST.pdb
@@ -15,6 +18,7 @@ C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\obj\Release\net7.0\PubTmp\Out\Mi
 C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\obj\Release\net7.0\PubTmp\Out\Microsoft.AspNetCore.Cryptography.Internal.dll
 C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\obj\Release\net7.0\PubTmp\Out\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
 C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\obj\Release\net7.0\PubTmp\Out\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\obj\Release\net7.0\PubTmp\Out\Microsoft.AspNetCore.SpaServices.Extensions.dll
 C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\obj\Release\net7.0\PubTmp\Out\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\obj\Release\net7.0\PubTmp\Out\Microsoft.Data.SqlClient.dll
 C:\Mokslai\4 metai\Saitynai\WebProject\QuizREST\obj\Release\net7.0\PubTmp\Out\Microsoft.EntityFrameworkCore.dll
