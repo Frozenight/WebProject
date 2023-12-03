@@ -4,12 +4,12 @@ import axios from 'axios';
 
 const quizesCollection = ref([]);
 const questionsCollection = ref([]);
+const showQuizzes = ref(true);
 
 onMounted(async () => {
     try {
         const response = await axios.get("https://quizktuweb.azurewebsites.net/api/quizes/");
         quizesCollection.value = response.data;
-        console.log('Quizes Collection:', quizesCollection.value);
     } catch (error) {
         console.error('Error fetching data:', error);
     }
@@ -17,19 +17,26 @@ onMounted(async () => {
 
 async function fetchQuestions(quizId) {
     try {
-        const response = await axios.get(`https://quizktuweb.azurewebsites.net/api/quizes/${quizId}/questions`);
-        questionsCollection.value = response.data;
-        console.log('Questions for quiz', quizId, ':', questionsCollection.value);
-        // Here you can handle the display or usage of the questions
+        const questionsResponse = await axios.get(`https://quizktuweb.azurewebsites.net/api/quizes/${quizId}/questions`);
+        questionsCollection.value = await Promise.all(questionsResponse.data.map(async (question) => {
+            const answersResponse = await axios.get(`https://quizktuweb.azurewebsites.net/api/quizes/${quizId}/questions/${question.id}/answers`);
+            return { ...question, answers: answersResponse.data };
+        }));
+        showQuizzes.value = false;
     } catch (error) {
-        console.error('Error fetching questions:', error);
+        console.error('Error fetching questions or answers:', error);
     }
+}
+
+function backToQuizzes() {
+    showQuizzes.value = true;
 }
 </script>
 
 <template>
   <div class="container">
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+    <!-- Quizzes -->
+    <div v-if="showQuizzes" class="row row-cols-1 row-cols-md-3 g-4">
       <div class="col" v-for="quiz in quizesCollection" :key="quiz.id">
         <div class="card">
           <div class="card-body">
@@ -40,6 +47,17 @@ async function fetchQuestions(quizId) {
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Questions and Answers -->
+    <div v-else class="questions">
+      <button class="btn btn-secondary" @click="backToQuizzes">Back to Quizzes</button>
+      <div v-for="question in questionsCollection" :key="question.id">
+        <p>{{ question.text }}</p>
+        <div v-for="answer in question.answers" :key="answer.id">
+          <button class="btn btn-outline-primary">{{ answer.text }}</button>
+        </div>
+      </div>  
     </div>
   </div>
 </template>
