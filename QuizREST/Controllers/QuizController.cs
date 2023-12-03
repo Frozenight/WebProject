@@ -43,27 +43,9 @@ namespace QuizREST.Controllers
         }
 
         [HttpGet(Name = "GetQuizes")]
-        public async Task<IActionResult> GetManyPaging([FromQuery] QuizSearchParameters searchParameters)
+        public async Task<IActionResult> GetManyPaging()
         {
-            var quizes = await _quizesRepository.GetManyAsync(searchParameters);
-
-            var previousPageLink = quizes.HasPrevious ?
-                CreateTopicsResourceUri(searchParameters, ResourceUriType.PreviousPage) : null;
-
-            var nextPageLink = quizes.HasNext ?
-                CreateTopicsResourceUri(searchParameters, ResourceUriType.NextPage) : null;
-
-            var paginationMetadata = new
-            {
-                totalCount = quizes.TotalCount,
-                pageSize = quizes.PageSize,
-                currentPage = quizes.CurrentPage,
-                totalPages = quizes.TotalPages,
-                previousPageLink,
-                nextPageLink
-            };
-
-            Response.Headers.Add("Pagination", JsonSerializer.Serialize(paginationMetadata));
+            var quizes = await _quizesRepository.GetManyAsync();
 
             var quizesDtoList = quizes.Select(quiz => new QuizesDto(quiz.Id, quiz.Name, quiz.Description, quiz.Category, quiz.CreatedDate));
 

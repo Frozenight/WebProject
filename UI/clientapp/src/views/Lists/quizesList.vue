@@ -4,7 +4,6 @@ import axios from 'axios';
 
 const quizesCollection = ref([]);
 const questionsCollection = ref([]);
-const showModal = ref(false);
 
 onMounted(async () => {
     try {
@@ -20,14 +19,11 @@ async function fetchQuestions(quizId) {
     try {
         const response = await axios.get(`https://quizktuweb.azurewebsites.net/api/quizes/${quizId}/questions`);
         questionsCollection.value = response.data;
-        showModal.value = true;
+        console.log('Questions for quiz', quizId, ':', questionsCollection.value);
+        // Here you can handle the display or usage of the questions
     } catch (error) {
         console.error('Error fetching questions:', error);
     }
-}
-
-function closeQuiz() {
-    showModal.value = false;
 }
 </script>
 
@@ -46,19 +42,4 @@ function closeQuiz() {
       </div>
     </div>
   </div>
-
-  <!-- Quiz Modal -->
-  <div v-if="showModal" class="quiz-modal">
-    <h2>Quiz Questions</h2>
-    <div v-for="question in questionsCollection" :key="question.id">
-      <p>{{ question.text }}</p>
-    </div>
-    <button class="btn btn-secondary" @click="closeQuiz">Close</button>
-  </div>
 </template>
-
-<style>
-.quiz-modal {
-  /* Add your modal styling here */
-}
-</style>
