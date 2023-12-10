@@ -13,6 +13,7 @@
             <p class="card-text"><strong>Category:</strong> {{ quiz.category }}</p>
             <button class="btn btn-primary" @click="editQuiz(quiz.id)">Edit</button>
             <button class="btn btn-primary" @click="deleteQuiz(quiz.id)">Delete</button>
+            <button class="btn btn-primary" @click="editQuestions(quiz.id)">Edit Questions</button>
           </div>
       </div>
     </div>
@@ -64,6 +65,10 @@ async function deleteQuiz(quizId) {
     console.error('Error deleting quiz:', error);
   }
 }
+
+function editQuestions(quizId) {
+    router.push({ name: 'editQuestions', params: { id: quizId } });
+  }
 
 </script>
 

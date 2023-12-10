@@ -4,6 +4,12 @@ import LoginRegister from '../views/LoginRegister.vue'
 import Admin from '../views/Lists/admin.vue'
 import CreateQuiz from '../views/Lists/Quizes/createQuiz.vue'
 import EditQuiz from '../views/Lists/Quizes/editQuiz.vue'
+import EditQuestions from '../views/Lists/Questions/editQuestions.vue'
+import EditQuestion from '../views/Lists/Questions/editQuestion.vue'
+import CreateQuestion from '../views/Lists/Questions/createQuestions.vue'
+import EditAnswers from '../views/Lists/Answers/editAnswers.vue'
+import CreateAnswer from '../views/Lists/Answers/CreateAnswer.vue'
+import EditAnswer from '../views/Lists/Answers/editAnswer.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +38,36 @@ const router = createRouter({
       path: '/editQuiz/:id',
       name: 'editQuiz',
       component: EditQuiz
+    },
+    {
+      path: '/edit-questions/:id',
+      name: 'editQuestions',
+      component: EditQuestions
+    },
+    {
+      path: '/edit-question/:id/',
+      name: 'editQuestion',
+      component: EditQuestion
+    },
+    {
+      path: '/create-question/:id',
+      name: 'createQuestion',
+      component: CreateQuestion
+    },
+    {
+      path: '/create-answers/:quizId/:id',
+      name: 'createAnswer',
+      component: CreateAnswer
+    },
+    {
+      path: '/edit-answers/:quizId/:questionId',
+      name: 'editAnswers',
+      component: EditAnswers
+    },
+    {
+      path: '/edit-answer/:quizId/:questionId/:answerId',
+      name: 'editAnswer',
+      component: EditAnswer
     }
     // You can add more routes here
   ]

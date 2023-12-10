@@ -14,8 +14,8 @@
           <label for="category">Category:</label>
           <input type="text" id="category" v-model="quiz.category" required>
         </div>
-        <button type="submit">Update Quiz</button>
-        <button type="goBack">Back</button>
+        <button @click="submitQuiz">Update Quiz</button>
+        <button @click="goBack">Back</button>
       </form>
     </div>
   </template>
@@ -75,6 +75,10 @@
 
   function goBack() {
     router.push({ name: 'admin'});
+  }
+
+  function editQuestions(quizId) {
+    router.push({ name: 'editQuestions', params: { id: quizId } });
   }
   </script>
   

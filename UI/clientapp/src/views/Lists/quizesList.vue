@@ -62,8 +62,8 @@ function create() {
 
     <div class="container">
     <div>
-      <p>Create</p>
-      <button @click="create">Create</button>
+      <p>Admin Menu</p>
+      <button @click="create">Go To Admin Menu</button>
     </div>
   </div>
     <!-- Quizzes -->

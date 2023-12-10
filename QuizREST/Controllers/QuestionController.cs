@@ -59,7 +59,7 @@ namespace QuizREST.Controllers
             }
 
             var links = CreateLinks(question.Id, httpContext, _linkGenerator);
-            var quiestionDto = new QuestionDto(question.Id, question.Text);
+            var quiestionDto = new QuestionDto(question.Id, question.Text, question.QuizId);
 
             return Ok(new { Resource = quiestionDto, Links = links });
         }
@@ -88,7 +88,7 @@ namespace QuizREST.Controllers
 
             // Create links for the created question
             var links = CreateLinks(question.Id, httpContext, _linkGenerator);
-            var questionDto = new QuestionDto(question.Id, question.Text);
+            var questionDto = new QuestionDto(question.Id, question.Text, question.QuizId);
 
             var resource = new ResourceDto<QuestionDto>(questionDto, links.ToArray());
 
@@ -126,7 +126,7 @@ namespace QuizREST.Controllers
             var httpContext = HttpContext.Request.HttpContext;
             var links = CreateLinks(question.Id, httpContext, _linkGenerator);
 
-            var updatedQuestionDto = new QuestionDto(question.Id, question.Text);
+            var updatedQuestionDto = new QuestionDto(question.Id, question.Text, question.QuizId);
 
             return Ok(new { Resource = updatedQuestionDto, Links = links });
         }

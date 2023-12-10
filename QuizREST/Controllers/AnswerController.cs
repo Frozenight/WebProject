@@ -53,7 +53,7 @@ namespace QuizREST.Controllers
             }
 
             var links = CreateLinks(answer.Id, httpContext, _linkGenerator);
-            var answerDto = new AnswerDto(answer.Id, answer.Text, answer.IsCorrect);
+            var answerDto = new AnswerDto(answer.Id, answer.Text, answer.IsCorrect, answer.QuestionId);
 
             return Ok(new { Resource = answerDto, Links = links });
         }
@@ -82,7 +82,7 @@ namespace QuizREST.Controllers
             // Create links for the created answer
             var httpContext = HttpContext.Request.HttpContext;
             var links = CreateLinks(answer.Id, httpContext, _linkGenerator);
-            var answerDto = new AnswerDto(answer.Id, answer.Text, answer.IsCorrect);
+            var answerDto = new AnswerDto(answer.Id, answer.Text, answer.IsCorrect, answer.QuestionId);
 
             var resource = new ResourceDto<AnswerDto>(answerDto, links.ToArray());
 
@@ -119,7 +119,7 @@ namespace QuizREST.Controllers
 
             var httpContext = HttpContext.Request.HttpContext;
             var links = CreateLinks(answer.Id, httpContext, _linkGenerator);
-            var updatedAnswerDto = new AnswerDto(answer.Id, answer.Text, answer.IsCorrect);
+            var updatedAnswerDto = new AnswerDto(answer.Id, answer.Text, answer.IsCorrect, answer.QuestionId);
 
             return Ok(new { Resource = updatedAnswerDto, Links = links });
         }
