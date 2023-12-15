@@ -10,6 +10,7 @@ import CreateQuestion from '../views/Lists/Questions/createQuestions.vue'
 import EditAnswers from '../views/Lists/Answers/editAnswers.vue'
 import CreateAnswer from '../views/Lists/Answers/CreateAnswer.vue'
 import EditAnswer from '../views/Lists/Answers/editAnswer.vue'
+import Quiz from '../views/Lists/quiz.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -68,8 +69,13 @@ const router = createRouter({
       path: '/edit-answer/:quizId/:questionId/:answerId',
       name: 'editAnswer',
       component: EditAnswer
+    },
+    {
+      path: '/quiz/:id',
+      name: 'quiz',
+      component: Quiz
     }
-    // You can add more routes here
+    
   ]
 })
 

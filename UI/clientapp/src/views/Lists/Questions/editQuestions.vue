@@ -1,7 +1,7 @@
 <template>
     <div class="edit-questions-container">
       <h1>Edit Questions for Quiz ID: {{ quizId }}</h1>
-      <button @click="createQuestion">Create New Question</button>
+      <button class="btn btn-primary" @click="createQuestion">Create New Question</button>
   
       <div v-if="questions.length">
         <div class="quizzes-list">
@@ -16,7 +16,7 @@
               </div>
             </div>
           </div>
-          <button type="button" @click="goBack">Back</button>
+          <button class="btn btn-secondary" type="button" @click="goBack">Back</button>
         </div>
       </div>
   

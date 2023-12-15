@@ -2,7 +2,7 @@
   <div class="admin-container">
     <h1>Admin Dashboard</h1>
 
-    <button @click="createQuiz">Create New Quiz</button>
+    <button @click="createQuiz" class="btn btn-primary">Create New Quiz</button>
 
     <div class="quizzes-list">
       <div class="col" v-for="quiz in quizesCollection" :key="quiz.id">
@@ -12,11 +12,12 @@
             <p class="card-text"><strong>Description:</strong> {{ quiz.description }}</p>
             <p class="card-text"><strong>Category:</strong> {{ quiz.category }}</p>
             <button class="btn btn-primary" @click="editQuiz(quiz.id)">Edit</button>
-            <button class="btn btn-primary" @click="deleteQuiz(quiz.id)">Delete</button>
-            <button class="btn btn-primary" @click="editQuestions(quiz.id)">Edit Questions</button>
+            <button class="btn btn-danger" @click="deleteQuiz(quiz.id)">Delete</button>
+            <button class="btn btn-secondary" @click="editQuestions(quiz.id)">Edit Questions</button>
           </div>
       </div>
     </div>
+    <button class="btn btn-secondary" type="button" @click="goBack">Back</button>
     </div>
   </div>
 </template>
@@ -70,6 +71,10 @@ function editQuestions(quizId) {
     router.push({ name: 'editQuestions', params: { id: quizId } });
   }
 
+function goBack() {
+    router.back();
+}
+  
 </script>
 
 <style scoped>

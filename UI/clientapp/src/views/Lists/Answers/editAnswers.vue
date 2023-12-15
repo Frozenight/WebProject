@@ -1,7 +1,7 @@
 <template>
     <div class="edit-answers-container">
       <h1>Edit Answers for Question ID: {{ questionId }}</h1>
-      <button @click="createAnswer">Create New Answer</button>
+      <button class="btn btn-primary" @click="createAnswer">Create New Answer</button>
   
       <div v-if="answers.length">
         <div class="answers-list">
@@ -15,13 +15,13 @@
               </div>
             </div>
           </div>
-          <button type="button" @click="goBack">Back</button>
+          <button class="btn btn-secondary" type="button" @click="goBack">Back</button>
         </div>
       </div>
   
       <div v-else>
         <p>No answers available for this question.</p>
-        <button type="button" @click="goBack">Back</button>
+        <button class="btn btn-secondary" type="button" @click="goBack">Back</button>
       </div>
     </div>
   </template>

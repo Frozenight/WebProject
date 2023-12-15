@@ -6,12 +6,12 @@
           <label for="answerText">Answer Text:</label>
           <input type="text" id="answerText" v-model="answer.text" required>
         </div>
-        <div>
+        <div class="form-group">
           <label for="isCorrect">Is Correct:</label>
           <input type="checkbox" id="isCorrect" v-model="answer.isCorrect">
         </div>
-        <button type="submit">Update Answer</button>
-        <button type="button" @click="goBack">Back</button>
+        <button class="btn btn-primary" type="submit">Update Answer</button>
+        <button class="btn btn-secondary" type="button" @click="goBack">Back</button>
       </form>
     </div>
   </template>
@@ -71,6 +71,30 @@
   </script>
   
   <style scoped>
-  /* Add your CSS here */
+       .container {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
   </style>
   

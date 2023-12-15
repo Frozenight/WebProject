@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const username = ref(localStorage.getItem('username') || 'Guest');
+const userRole = ref(localStorage.getItem('role') || 'Guest'); // Retrieve the role from local storage
 const quizesCollection = ref([]);
 const questionsCollection = ref([]);
 const showQuizzes = ref(true);
@@ -20,17 +21,8 @@ onMounted(async () => {
     }
 });
 
-async function fetchQuestions(quizId) {
-    try {
-        const questionsResponse = await axios.get(localurl + `/api/quizes/${quizId}/questions`);
-        questionsCollection.value = await Promise.all(questionsResponse.data.map(async (question) => {
-            const answersResponse = await axios.get(localurl + `/api/quizes/${quizId}/questions/${question.id}/answers`);
-            return { ...question, answers: answersResponse.data };
-        }));
-        showQuizzes.value = false;
-    } catch (error) {
-        console.error('Error fetching questions or answers:', error);
-    }
+ function fetchQuestions(quizId) {
+  router.push({ name: 'quiz', params: { id: quizId} });
 }
 
 function backToQuizzes() {
@@ -41,8 +33,9 @@ function logoutAndRedirect() {
     // Clear user-related data
     localStorage.removeItem('username');
     localStorage.removeItem('token');
+    localStorage.removeItem('role'); 
     username.value = 'Guest';
-    // Redirect to login/register page
+    userRole.value = 'Guest';
     router.push({ name: 'login' });
 }
 
@@ -53,22 +46,22 @@ function create() {
 </script>
 
 <template>
-    <div class="container">
-    <div>
-      <p>Logged in as: {{ username }}</p>
-      <button @click="logoutAndRedirect">Logout / Back to Login</button>
-    </div>
-  </div>
+  <div class="main-container">
+      <!-- Logout Menu -->
+      <div class="container logout-menu">
+          <p>Logged in as: {{ username }}</p>
+          <button class="btn btn-secondary" @click="logoutAndRedirect">Logout / Back to Login</button>
+      </div>
 
-    <div class="container">
-    <div>
-      <p>Admin Menu</p>
-      <button @click="create">Go To Admin Menu</button>
-    </div>
+      <!-- Admin Menu or Placeholder -->
+      <div v-if="userRole === 'Admin'" class="container admin-menu">
+          <p>Admin Menu</p>
+          <button class="btn btn-primary" @click="create">Go To Admin Menu</button>
+      </div>
+      <div v-else class="container invisible-placeholder"></div>
   </div>
     <!-- Quizzes -->
     <!-- ...existing code... -->
-  <div class="container">
     <!-- Quizzes -->
     <div v-if="showQuizzes" class="row row-cols-1 row-cols-md-3 g-4">
       <div class="col" v-for="quiz in quizesCollection" :key="quiz.id">
@@ -82,16 +75,27 @@ function create() {
         </div>
       </div>
     </div>
-
-    <!-- Questions and Answers -->
-    <div v-else class="questions">
-      <button class="btn btn-secondary" @click="backToQuizzes">Back to Quizzes</button>
-      <div v-for="question in questionsCollection" :key="question.id">
-        <p>{{ question.text }}</p>
-        <div v-for="answer in question.answers" :key="answer.id">
-          <button class="btn btn-outline-primary">{{ answer.text }}</button>
-        </div>
-      </div>  
-    </div>
-  </div>
 </template>
+
+<style>
+.main-container {
+    display: flex;
+    justify-content: flex-start; /* Aligns children to the start of the container */
+    margin: 20px;
+}
+
+.container {
+    flex-basis: 48%; /* Adjust this value as needed */
+    font-family: Arial, sans-serif;
+}
+
+
+.admin-menu {
+    margin-left: auto; /* Pushes the admin menu to the right */
+}
+
+.invisible-placeholder {
+    visibility: hidden;
+    width: 500px; /* Keep the same width as the admin-menu for consistency */
+}
+</style>

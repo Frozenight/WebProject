@@ -14,7 +14,8 @@
           <label for="category">Category:</label>
           <input type="text" id="category" v-model="quiz.category" required>
         </div>
-        <button type="submit">Create Quiz</button>
+        <button class="btn btn-primary" type="submit">Create Quiz</button>
+        <button class="btn btn-secondary" @click="goBack">Back</button>
       </form>
     </div>
   </template>
@@ -50,9 +51,37 @@
     }
   }
 
+  function goBack() {
+    router.push({ name: 'admin'});
+  }
+
   </script>
   
   <style scoped>
-  /* Add your CSS here */
+       .container {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
   </style>
   
