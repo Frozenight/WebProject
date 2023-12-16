@@ -18,6 +18,15 @@
       <!-- Add any other results or navigation buttons here -->
     </div>
   </div>
+  <div class="svg-container">
+      <img src="../../assets/svg2.svg" alt="Logo" class="svg-icon" />
+    </div>
+    <div class="svg-container1">
+      <img src="../../assets/svg3.svg" alt="Logo" class="svg-icon" />
+    </div>
+    <div class="svg-container2">
+      <img src="../../assets/svg4.svg" alt="Logo" class="svg-icon" />
+    </div>
 </template>
 
 
@@ -112,5 +121,22 @@ const calculateResults = () => {
 .results p {
   font-size: 1rem;
   color: #333;
+}
+
+.svg-container {
+  text-align: right; /* Center the SVG if needed */
+}
+
+.svg-container1 {
+  text-align: left; /* Center the SVG if needed */
+}
+
+.svg-container2 {
+  text-align: center; /* Center the SVG if needed */
+}
+
+.svg-icon {
+  width: 100px; /* Adjust as needed */
+  height: auto;
 }
 </style>

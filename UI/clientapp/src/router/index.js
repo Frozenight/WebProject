@@ -11,6 +11,7 @@ import EditAnswers from '../views/Lists/Answers/editAnswers.vue'
 import CreateAnswer from '../views/Lists/Answers/CreateAnswer.vue'
 import EditAnswer from '../views/Lists/Answers/editAnswer.vue'
 import Quiz from '../views/Lists/quiz.vue'
+import AboutView from '../views/AboutView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -74,6 +75,11 @@ const router = createRouter({
       path: '/quiz/:id',
       name: 'quiz',
       component: Quiz
+    },
+    {
+      path: '/about',
+      name: 'About',
+      component: AboutView,
     }
     
   ]
